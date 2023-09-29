@@ -57,7 +57,7 @@ pub enum DBOutput<T: ColumnType> {
 }
 
 /// The async database to be tested.
-#[async_trait]
+#[async_trait(?Send)]
 pub trait AsyncDB {
     /// The error type of SQL execution.
     type Error: std::error::Error + Send + Sync + 'static;
@@ -108,10 +108,10 @@ pub trait DB {
 }
 
 /// Compat-layer for the new AsyncDB and DB trait
-#[async_trait]
+#[async_trait(?Send)]
 impl<D> AsyncDB for D
 where
-    D: DB + Send,
+    D: DB,
 {
     type Error = D::Error;
     type ColumnType = D::ColumnType;
